@@ -6,7 +6,7 @@ function App() {
   return (
     <AppShell title="GymApp" actions={<Button variant="text">Action</Button>}>
       <Stack spacing={2}>
-        <Typography variant="h4">Home placeholder</Typography>
+        {/* <Typography variant="h4">Home placeholder</Typography> */}
 
         <Card>
           <CardContent>

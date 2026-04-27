@@ -1,4 +1,3 @@
-// src/styles/theme.js
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -66,7 +65,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           boxShadow: 'none',
-          borderBottom: '1px solid rgba(0,0,0,0.08)',
+          // borderBottom: '1px solid rgba(0,0,0,0.08)',
         },
       },
     },
