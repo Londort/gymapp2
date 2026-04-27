@@ -5,7 +5,10 @@ import HomePage from '@/pages/HomePage';
 import WorkoutPage from '@/pages/WorkoutPage';
 import AuthPage from '@/pages/AuthPage';
 
+// import { useAuth } from './providers/useAuth';
+
 export default function App() {
+  // console.log(useAuth());
   return (
     <BrowserRouter>
       <Routes>
