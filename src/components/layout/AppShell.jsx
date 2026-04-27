@@ -1,4 +1,3 @@
-// src/components/layout/AppShell.jsx
 import {
   AppBar,
   Box,
@@ -13,11 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 
-export default function AppShell({
-  title = 'GymApp',
-  children,
-  actions = null,
-}) {
+export default function AppShell({ title = 'GymApp', children }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
 
@@ -111,5 +106,3 @@ export default function AppShell({
     </Box>
   );
 }
-
-// export default AppShell;
