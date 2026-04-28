@@ -15,7 +15,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 8,
   },
   spacing: 8,
   typography: {
