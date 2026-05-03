@@ -11,12 +11,26 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { loginSchema, registerSchema } from '@/features/auth/auth.schema';
+import {
+  loginSchema,
+  registerSchema,
+  forgotPasswordSchema,
+} from '@/features/auth/auth.schema';
 import { authService } from '@/features/auth/auth.service';
 
-export default function AuthForm({ mode, onSwitchMode }) {
+export default function AuthForm({ mode, onChangeMode }) {
   const isLogin = mode === 'login';
+  const isRegister = mode === 'register';
+  const isForgotPassword = mode === 'forgotPassword';
+
   const [submitError, setSubmitError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const currentSchema = isLogin
+    ? loginSchema
+    : isRegister
+      ? registerSchema
+      : forgotPasswordSchema;
 
   const {
     register,
@@ -24,7 +38,7 @@ export default function AuthForm({ mode, onSwitchMode }) {
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
-    resolver: zodResolver(isLogin ? loginSchema : registerSchema),
+    resolver: zodResolver(currentSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -34,17 +48,26 @@ export default function AuthForm({ mode, onSwitchMode }) {
 
   async function onSubmit(data) {
     setSubmitError('');
+
     try {
       if (isLogin) {
         await authService.login({
           email: data.email,
           password: data.password,
         });
-      } else {
+      }
+
+      if (isRegister) {
         await authService.register({
           email: data.email,
           password: data.password,
         });
+      }
+
+      if (isForgotPassword) {
+        // console.log('Send reset link to:', data.email);
+        await authService.sendResetPasswordEmail(data.email);
+        setSuccessMessage('Password reset email sent. Check your inbox.');
       }
     } catch (err) {
       setSubmitError(err.message || 'Authentication failed');
@@ -53,6 +76,7 @@ export default function AuthForm({ mode, onSwitchMode }) {
 
   async function handleGoogleSignIn() {
     setSubmitError('');
+
     try {
       await authService.signInWithGoogle();
     } catch (err) {
@@ -60,19 +84,22 @@ export default function AuthForm({ mode, onSwitchMode }) {
     }
   }
 
-  function handleSwitchMode() {
+  function handleChangeMode(nextMode) {
     reset();
     setSubmitError('');
-    onSwitchMode();
+    onChangeMode(nextMode);
   }
 
   return (
     <Stack spacing={3}>
       <Typography variant="h5" fontWeight={700}>
-        {isLogin ? 'Sign in' : 'Sign up'}
+        {isLogin && 'Sign in'}
+        {isRegister && 'Sign up'}
+        {isForgotPassword && 'Reset password'}
       </Typography>
 
       {submitError && <Alert severity="error">{submitError}</Alert>}
+      {successMessage && <Alert severity="success">{successMessage}</Alert>}
 
       <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
         <TextField
@@ -85,17 +112,19 @@ export default function AuthForm({ mode, onSwitchMode }) {
           helperText={errors.email?.message}
         />
 
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          disabled={isSubmitting}
-          {...register('password')}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-        />
+        {!isForgotPassword && (
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            disabled={isSubmitting}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+        )}
 
-        {!isLogin && (
+        {isRegister && (
           <TextField
             label="Confirm password"
             type="password"
@@ -118,24 +147,49 @@ export default function AuthForm({ mode, onSwitchMode }) {
             ? 'Please wait...'
             : isLogin
               ? 'Sign In'
-              : 'Create account'}
+              : isRegister
+                ? 'Create account'
+                : 'Send reset link'}
         </Button>
       </Stack>
 
-      <Divider>or</Divider>
+      {isLogin && (
+        <Button
+          type="button"
+          variant="text"
+          disabled={isSubmitting}
+          onClick={() => handleChangeMode('forgotPassword')}
+          sx={{
+            alignSelf: 'center',
+            fontWeight: 400,
+            textDecoration: 'underline',
+          }}
+        >
+          Forgot password?
+        </Button>
+      )}
 
-      <Button
-        variant="outlined"
-        size="large"
-        fullWidth
-        disabled={isSubmitting}
-        onClick={handleGoogleSignIn}
-      >
-        Continue with Google
-      </Button>
+      {!isForgotPassword && (
+        <>
+          <Divider>or</Divider>
+
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            disabled={isSubmitting}
+            onClick={handleGoogleSignIn}
+          >
+            Continue with Google
+          </Button>
+        </>
+      )}
 
       <Typography variant="body2">
-        {isLogin ? 'Don’t have an account?' : 'Already have an account?'}
+        {isLogin && 'Don’t have an account?'}
+        {isRegister && 'Already have an account?'}
+        {isForgotPassword && 'Remember your password?'}
+
         <Button
           type="button"
           disabled={isSubmitting}
@@ -143,9 +197,11 @@ export default function AuthForm({ mode, onSwitchMode }) {
             fontWeight: 400,
             textDecoration: 'underline',
           }}
-          onClick={handleSwitchMode}
+          onClick={() => handleChangeMode(isLogin ? 'register' : 'login')}
         >
-          {isLogin ? 'Sign up' : 'Sign in'}
+          {isLogin && 'Sign up'}
+          {isRegister && 'Sign in'}
+          {isForgotPassword && 'Sign in'}
         </Button>
       </Typography>
     </Stack>
