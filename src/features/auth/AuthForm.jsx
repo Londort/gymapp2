@@ -1,5 +1,13 @@
 // src/features/auth/components/AuthForm.jsx
-import { Stack, Typography, TextField, Button, Divider } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Alert,
+} from '@mui/material';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -8,6 +16,7 @@ import { authService } from '@/features/auth/auth.service';
 
 export default function AuthForm({ mode, onSwitchMode }) {
   const isLogin = mode === 'login';
+  const [submitError, setSubmitError] = useState('');
 
   const {
     register,
@@ -24,25 +33,36 @@ export default function AuthForm({ mode, onSwitchMode }) {
   });
 
   async function onSubmit(data) {
-    if (isLogin) {
-      await authService.login({
-        email: data.email,
-        password: data.password,
-      });
-    } else {
-      await authService.register({
-        email: data.email,
-        password: data.password,
-      });
+    setSubmitError('');
+    try {
+      if (isLogin) {
+        await authService.login({
+          email: data.email,
+          password: data.password,
+        });
+      } else {
+        await authService.register({
+          email: data.email,
+          password: data.password,
+        });
+      }
+    } catch (err) {
+      setSubmitError(err.message || 'Authentication failed');
     }
   }
 
   async function handleGoogleSignIn() {
-    await authService.signInWithGoogle();
+    setSubmitError('');
+    try {
+      await authService.signInWithGoogle();
+    } catch (err) {
+      setSubmitError(err.message || 'Google authentication failed');
+    }
   }
 
   function handleSwitchMode() {
     reset();
+    setSubmitError('');
     onSwitchMode();
   }
 
@@ -51,6 +71,8 @@ export default function AuthForm({ mode, onSwitchMode }) {
       <Typography variant="h5" fontWeight={700}>
         {isLogin ? 'Sign in' : 'Sign up'}
       </Typography>
+
+      {submitError && <Alert severity="error">{submitError}</Alert>}
 
       <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
         <TextField
@@ -112,7 +134,7 @@ export default function AuthForm({ mode, onSwitchMode }) {
         Continue with Google
       </Button>
 
-      <Typography variant="body2" textAlign="center">
+      <Typography variant="body2">
         {isLogin ? 'Don’t have an account?' : 'Already have an account?'}
         <Button
           type="button"
