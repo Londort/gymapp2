@@ -11,7 +11,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { resetPasswordSchema } from '@/features/auth/auth.schema';
+import { resetPasswordSchema } from '@/features/auth/validation/auth.schema';
 
 export default function ResetPasswordPage() {
   const {

@@ -1,7 +1,7 @@
 // src/pages/auth/AuthPage.jsx
 import { useState } from 'react';
 import { Box, Container, Paper } from '@mui/material';
-import AuthForm from '@/features/auth/AuthForm';
+import AuthCard from '@/features/auth/components/AuthCard';
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login');
@@ -10,7 +10,7 @@ export default function AuthPage() {
     <Container maxWidth="sm">
       <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
         <Paper sx={{ width: '100%', p: 4 }}>
-          <AuthForm mode={mode} onChangeMode={setMode} />
+          <AuthCard mode={mode} onChangeMode={setMode} />
         </Paper>
       </Box>
     </Container>

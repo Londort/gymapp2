@@ -15,10 +15,10 @@ import {
   loginSchema,
   registerSchema,
   forgotPasswordSchema,
-} from '@/features/auth/auth.schema';
-import { authService } from '@/features/auth/auth.service';
+} from '@/features/auth/validation/auth.schema';
+import { authService } from '@/features/auth/services/auth.service';
 
-export default function AuthForm({ mode, onChangeMode }) {
+export default function AuthCard({ mode, onChangeMode }) {
   const isLogin = mode === 'login';
   const isRegister = mode === 'register';
   const isForgotPassword = mode === 'forgotPassword';
