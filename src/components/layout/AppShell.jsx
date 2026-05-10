@@ -31,14 +31,14 @@ export default function AppShell({ title = 'GymApp', children }) {
     handleMenuClose();
     try {
       await authService.logout();
-      navigate('auth/login');
+      navigate('/auth/login');
     } catch (err) {
       console.error('Logout failed', err.message);
     }
   }
 
   const theme = useTheme();
-  console.log(theme);
+  // console.log(theme);
 
   return (
     <Box
@@ -82,9 +82,9 @@ export default function AppShell({ title = 'GymApp', children }) {
               vertical: 'bottom',
               horizontal: 'right',
             }}
-            tranformorigin={{
+            transformOrigin={{
               vertical: 'top',
-              horisontal: 'right',
+              horizontal: 'right',
             }}
           >
             <MenuItem onClick={handleMenuClose}>Profilo</MenuItem>
