@@ -8,6 +8,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
+  console.log(session);
+
   useEffect(() => {
     let isMounted = true;
 
