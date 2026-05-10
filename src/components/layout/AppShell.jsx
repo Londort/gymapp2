@@ -11,16 +11,29 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authService } from '@/features/auth/services/auth.service';
 
 export default function AppShell({ title = 'GymApp', children }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   function handleMenuOpen(e) {
     setAnchorEl(e.currentTarget);
   }
+
   function handleMenuClose() {
     setAnchorEl(null);
+  }
+
+  async function handleLogout() {
+    try {
+      await authService.logout();
+      navigate('auth/login');
+    } catch (err) {
+      console.error('Logout failed', err.message);
+    }
   }
 
   const theme = useTheme();
@@ -68,13 +81,20 @@ export default function AppShell({ title = 'GymApp', children }) {
               vertical: 'bottom',
               horizontal: 'right',
             }}
-            tranformOrigin={{
+            tranformorigin={{
               vertical: 'top',
               horisontal: 'right',
             }}
           >
             <MenuItem onClick={handleMenuClose}>Profilo</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            <MenuItem
+              onClick={async () => {
+                handleMenuClose();
+                await handleLogout();
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

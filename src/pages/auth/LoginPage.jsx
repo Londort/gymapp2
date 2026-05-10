@@ -1,18 +1,10 @@
-// src/pages/auth/AuthPage.jsx
-import { useState } from 'react';
-import { Box, Container, Paper } from '@mui/material';
 import AuthCard from '@/features/auth/components/AuthCard';
+import LoginForm from '@/features/auth/components/LoginForm';
 
-export default function AuthPage() {
-  const [mode, setMode] = useState('login');
-
+export default function LoginPage() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-        <Paper sx={{ width: '100%', p: 4 }}>
-          <AuthCard mode={mode} onChangeMode={setMode} />
-        </Paper>
-      </Box>
-    </Container>
+    <AuthCard title="Sign in" subtitle="Access your workouts.">
+      <LoginForm />
+    </AuthCard>
   );
 }
