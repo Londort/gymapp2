@@ -1,5 +1,6 @@
 // src/app/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from '@/app/router/ProtectedRoute';
 
 import HomePage from '@/pages/HomePage';
 import WorkoutPage from '@/pages/WorkoutPage';
@@ -23,8 +24,10 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* App routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/workouts/:workoutId" element={<WorkoutPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/workouts/:workoutId" element={<WorkoutPage />} />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
