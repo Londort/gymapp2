@@ -28,6 +28,7 @@ export default function AppShell({ title = 'GymApp', children }) {
   }
 
   async function handleLogout() {
+    handleMenuClose();
     try {
       await authService.logout();
       navigate('auth/login');
@@ -87,14 +88,7 @@ export default function AppShell({ title = 'GymApp', children }) {
             }}
           >
             <MenuItem onClick={handleMenuClose}>Profilo</MenuItem>
-            <MenuItem
-              onClick={async () => {
-                handleMenuClose();
-                await handleLogout();
-              }}
-            >
-              Logout
-            </MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
