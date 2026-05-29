@@ -12,3 +12,21 @@ export async function listWorkouts() {
 
   return data ?? [];
 }
+
+export async function createWorkout({ userId, name, description }) {
+  const { data, error } = await supabase
+    .from('workouts')
+    .insert({
+      user_id: userId,
+      name: name,
+      description: description || null,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}

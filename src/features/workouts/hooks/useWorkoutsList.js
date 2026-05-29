@@ -39,9 +39,14 @@ export function useWorkoutsList() {
     };
   }, []);
 
+  function addWorkout(workout) {
+    setWorkouts((currentWorkouts) => [workout, ...currentWorkouts]);
+  }
+
   return {
     workouts,
     isLoading,
     error,
+    addWorkout,
   };
 }
